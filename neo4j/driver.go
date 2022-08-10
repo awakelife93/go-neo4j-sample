@@ -30,11 +30,14 @@ func connect() error {
 		password = "neo4j"
 	}
 
-	driver, error := neo4j.NewDriver(uri, neo4j.BasicAuth(username, password, ""), func(config *neo4j.Config) {
-		config.MaxConnectionLifetime = 60 * 60 * time.Second
-		config.MaxConnectionPoolSize = 50
-		config.ConnectionAcquisitionTimeout = 2 * time.Minute
-	})
+	driver, error := neo4j.NewDriver(
+		uri,
+		neo4j.BasicAuth(username, password, ""),
+		func(config *neo4j.Config) {
+			config.MaxConnectionLifetime = 60 * 60 * time.Second
+			config.MaxConnectionPoolSize = 50
+			config.ConnectionAcquisitionTimeout = 2 * time.Minute
+		})
 
 	if error != nil {
 		return error
