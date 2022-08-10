@@ -10,6 +10,8 @@
 
 ```
 1. neo4j admin(management browser) - {server domain or ip}:7474/browser/
+  - default username / password is "neo4j"
+  - https://btholt.github.io/complete-intro-to-databases/neo4j-browser
 ```
 
 ## Author
