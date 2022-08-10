@@ -15,16 +15,19 @@ var sessionObject neo4j.Session = nil
 
 func connect() error {
 	uri := os.Getenv("uri")
+	username := os.Getenv("username")
+	password := os.Getenv("password")
 
 	if funk.IsEmpty(uri) {
 		uri = "bolt://localhost:7687"
 	}
 
-	username := os.Getenv("username")
-	password := os.Getenv("password")
+	if funk.IsEmpty(username) {
+		username = "neo4j"
+	}
 
-	if funk.IsEmpty(uri) || funk.IsEmpty(uri) || funk.IsEmpty(uri) {
-		return errors.New("Empty Connect Info")
+	if funk.IsEmpty(password) {
+		password = "neo4j"
 	}
 
 	driver, error := neo4j.NewDriver(uri, neo4j.BasicAuth(username, password, ""), func(config *neo4j.Config) {
