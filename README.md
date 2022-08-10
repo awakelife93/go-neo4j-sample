@@ -3,7 +3,7 @@
 ## [Note]
 
 ```
-1. study & learn golang & neo4j
+1. study & learn golang, neo4j
 ```
 
 ### Description
