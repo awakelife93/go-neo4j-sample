@@ -3,33 +3,50 @@ package main
 import (
 	"fmt"
 
-	"github.com/awakelife93/go-neo4j-sample/neo4j"
+	"github.com/awakelife93/go-neo4j-sample/lib"
+	"github.com/neo4j/neo4j-go-driver/neo4j"
 )
 
 func start() {
-	initializeResult, initializeError := neo4j.Initialize()
+	initializeResult, initializeError := lib.Initialize()
 
 	if initializeError != nil {
 		fmt.Println("Initialize Error ====>", initializeError.Error())
-		neo4j.ClearDriver()
-		neo4j.ClearSession()
+		lib.Clear()
 		return
 	}
 
 	fmt.Println(initializeResult)
 
-	queryResult, queryError := neo4j.Query(
-		"CREATE (a:Greeting) SET a.message = $message RETURN a.message + ', from node ' + id(a)",
+	createQueryResult, createQueryError := lib.CreateQuery(
+		"CREATE (a:Sample) SET a.message = $message RETURN a.message + ', from node ' + id(a)",
 		map[string]interface{}{"message": "hello, world"},
 	)
 
-	// todo: TLS error: Remote end closed the connection, check that TLS is enabled on the server 트러블 슈팅
-	if queryError != nil {
-		fmt.Println("Query Error ====>", queryError.Error())
+	if createQueryError != nil {
+		fmt.Println("Create Query Error ====>", createQueryError.Error())
 		return
 	}
 
-	fmt.Println(queryResult)
+	fmt.Println("Create Result ====>", createQueryResult)
+
+	matchQueryResult, matchQueryError := lib.MatchQuery(
+		"MATCH (n) RETURN n",
+		map[string]interface{}{},
+	)
+
+	if matchQueryError != nil {
+		fmt.Println("Match Query Error ====>", matchQueryError.Error())
+		return
+	}
+
+	if matchQueryResult != nil {
+		var result = matchQueryResult.(neo4j.Node)
+
+		fmt.Println("Match Result Id ====>", result.Id())
+		fmt.Println("Match Result Label ====>", result.Labels())
+		fmt.Println("Match Result Props ====>", result.Props())
+	}
 }
 
 func main() {

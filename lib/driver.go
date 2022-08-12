@@ -1,4 +1,4 @@
-package neo4j
+package lib
 
 import (
 	"errors"
@@ -11,7 +11,6 @@ import (
 )
 
 var driverObject neo4j.Driver = nil
-var sessionObject neo4j.Session = nil
 
 func connect() error {
 	uri := os.Getenv("uri")
@@ -27,7 +26,7 @@ func connect() error {
 	}
 
 	if funk.IsEmpty(password) {
-		password = "neo4j"
+		password = "test"
 	}
 
 	driver, error := neo4j.NewDriver(
@@ -37,6 +36,7 @@ func connect() error {
 			config.MaxConnectionLifetime = 60 * 60 * time.Second
 			config.MaxConnectionPoolSize = 50
 			config.ConnectionAcquisitionTimeout = 2 * time.Minute
+			config.Encrypted = false
 		})
 
 	if error != nil {
@@ -48,20 +48,21 @@ func connect() error {
 	return nil
 }
 
-func setupSession() error {
+func setupSession() (neo4j.Session, error) {
 	if funk.IsEmpty(driverObject) {
-		return errors.New("Empty driverObject")
+		return nil, errors.New("Empty driverObject")
 	}
 
-	session, error := driverObject.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite, DatabaseName: "neo4j"})
+	session, error := driverObject.NewSession(
+		neo4j.SessionConfig{
+			AccessMode: neo4j.AccessModeWrite,
+		})
 
 	if error != nil {
-		return error
+		return session, error
 	}
 
-	sessionObject = session
-
-	return nil
+	return session, error
 }
 
 func Initialize() (string, error) {
@@ -73,20 +74,20 @@ func Initialize() (string, error) {
 		return "", connectError
 	}
 
-	setupSessionError := setupSession()
-
-	if setupSessionError != nil {
-		return "", setupSessionError
-	}
-
 	return "initialize success", nil
 }
 
 func getSession() neo4j.Session {
-	return sessionObject
+	session, error := setupSession()
+
+	if error != nil {
+		fmt.Println("getSession Error ====> ", error.Error())
+	}
+
+	return session
 }
 
-func ClearDriver() {
+func clearDriver() {
 	fmt.Println("Clear Neo4j Driver")
 
 	if driverObject != nil {
@@ -95,11 +96,25 @@ func ClearDriver() {
 	}
 }
 
-func ClearSession() {
+func clearSession(session neo4j.Session) {
 	fmt.Println("Clear Neo4j Session")
 
-	if sessionObject != nil {
-		sessionObject.Close()
-		sessionObject = nil
+	if session != nil {
+		error := session.Close()
+
+		if error != nil {
+			fmt.Println("clearSession Error ====> ", error)
+		}
+
+		session = nil
 	}
+}
+
+func renewalSession(session neo4j.Session) {
+	defer setupSession()
+	clearSession(session)
+}
+
+func Clear() {
+	clearDriver()
 }
