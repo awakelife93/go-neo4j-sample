@@ -92,12 +92,33 @@ func CreateQuery(cypher string, params map[string]interface{}) (string, error) {
 	return result, nil
 }
 
-func MatchQuery(cypher string, params map[string]interface{}) (interface{}, error) {
+func MatchQuery(cypher string, params map[string]interface{}) (neo4j.Node, error) {
+	var result neo4j.Node = nil
 	queryResult, error := readTransaction(cypher, params)
 
 	if error != nil {
 		return nil, error
 	}
 
-	return queryResult, nil
+	if queryResult != nil {
+		result = queryResult.(neo4j.Node)
+	}
+
+	return result, nil
+}
+
+func RemoveQuery(cypher string, params map[string]interface{}) (neo4j.Node, error) {
+	var result neo4j.Node = nil
+	queryResult, error := writeTransaction(cypher, params)
+
+	if error != nil {
+		return nil, error
+	}
+
+	if queryResult != nil {
+		var queryResultArray = queryResult.([]interface{})
+		result = queryResultArray[0].(neo4j.Node)
+	}
+
+	return result, nil
 }

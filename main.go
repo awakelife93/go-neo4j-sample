@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/awakelife93/go-neo4j-sample/lib"
-	"github.com/neo4j/neo4j-go-driver/neo4j"
 )
 
 func start() {
@@ -19,7 +18,7 @@ func start() {
 	fmt.Println(initializeResult)
 
 	createQueryResult, createQueryError := lib.CreateQuery(
-		"CREATE (a:Sample) SET a.message = $message RETURN a.message + ', from node ' + id(a)",
+		"CREATE (n:Sample) SET n.message = $message RETURN n.message + ', from node ' + id(n)",
 		map[string]interface{}{"message": "hello, world"},
 	)
 
@@ -41,11 +40,25 @@ func start() {
 	}
 
 	if matchQueryResult != nil {
-		var result = matchQueryResult.(neo4j.Node)
+		fmt.Println("Match Result Label ====>", matchQueryResult.Labels())
+	} else {
+		fmt.Println("Match Node is Nil")
+	}
 
-		fmt.Println("Match Result Id ====>", result.Id())
-		fmt.Println("Match Result Label ====>", result.Labels())
-		fmt.Println("Match Result Props ====>", result.Props())
+	removeQueryResult, removeQueryError := lib.RemoveQuery(
+		"MATCH (n{message: 'hello, world22'}) REMOVE n.message return n",
+		map[string]interface{}{"message": "hello, world"},
+	)
+
+	if removeQueryError != nil {
+		fmt.Println("Remove Query Error ====>", removeQueryError.Error())
+		return
+	}
+
+	if removeQueryResult != nil {
+		fmt.Println("Remove Result Label ====>", removeQueryResult.Labels())
+	} else {
+		fmt.Println("Remove Node is Nil")
 	}
 }
 
