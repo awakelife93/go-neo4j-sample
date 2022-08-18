@@ -77,7 +77,7 @@ func readTransaction(cypher string, params map[string]interface{}) (interface{},
 	return queryResult, nil
 }
 
-func CreateQuery(cypher string, params map[string]interface{}) (string, error) {
+func Create(cypher string, params map[string]interface{}) (string, error) {
 	queryResult, error := writeTransaction(cypher, params)
 
 	if error != nil {
@@ -92,7 +92,7 @@ func CreateQuery(cypher string, params map[string]interface{}) (string, error) {
 	return result, nil
 }
 
-func MatchQuery(cypher string, params map[string]interface{}) (neo4j.Node, error) {
+func Match(cypher string, params map[string]interface{}) (neo4j.Node, error) {
 	var result neo4j.Node = nil
 	queryResult, error := readTransaction(cypher, params)
 
@@ -107,7 +107,7 @@ func MatchQuery(cypher string, params map[string]interface{}) (neo4j.Node, error
 	return result, nil
 }
 
-func RemoveQuery(cypher string, params map[string]interface{}) (neo4j.Node, error) {
+func Remove(cypher string, params map[string]interface{}) (neo4j.Node, error) {
 	var result neo4j.Node = nil
 	queryResult, error := writeTransaction(cypher, params)
 
@@ -121,4 +121,14 @@ func RemoveQuery(cypher string, params map[string]interface{}) (neo4j.Node, erro
 	}
 
 	return result, nil
+}
+
+func Delete(cypher string, params map[string]interface{}) error {
+	_, error := writeTransaction(cypher, params)
+
+	if error != nil {
+		return error
+	}
+
+	return nil
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/awakelife93/go-neo4j-sample/lib"
 )
@@ -17,21 +18,22 @@ func start() {
 
 	fmt.Println(initializeResult)
 
-	createQueryResult, createQueryError := lib.CreateQuery(
-		"CREATE (n:Sample) SET n.message = $message RETURN n.message + ', from node ' + id(n)",
-		map[string]interface{}{"message": "hello, world"},
-	)
+	for i := 1; i <= 10; i++ {
+		createQueryResult, createQueryError := lib.Create(
+			"CREATE (n:Sample) SET n.message = $message RETURN n.message + ', from node ' + id(n)",
+			map[string]interface{}{"message": "hello, world" + strconv.Itoa(i)},
+		)
 
-	if createQueryError != nil {
-		fmt.Println("Create Query Error ====>", createQueryError.Error())
-		return
+		if createQueryError != nil {
+			fmt.Println("Create Query Error ====>", createQueryError.Error())
+		}
+
+		fmt.Println("Create Result ====>", createQueryResult)
 	}
 
-	fmt.Println("Create Result ====>", createQueryResult)
-
-	matchQueryResult, matchQueryError := lib.MatchQuery(
+	matchQueryResult, matchQueryError := lib.Match(
 		"MATCH (n) RETURN n",
-		map[string]interface{}{},
+		nil,
 	)
 
 	if matchQueryError != nil {
@@ -45,9 +47,9 @@ func start() {
 		fmt.Println("Match Node is Nil")
 	}
 
-	removeQueryResult, removeQueryError := lib.RemoveQuery(
-		"MATCH (n{message: 'hello, world22'}) REMOVE n.message return n",
-		map[string]interface{}{"message": "hello, world"},
+	removeQueryResult, removeQueryError := lib.Remove(
+		"MATCH (n{message: 'hello, world1'}) REMOVE n.message return n",
+		nil,
 	)
 
 	if removeQueryError != nil {
@@ -59,6 +61,26 @@ func start() {
 		fmt.Println("Remove Result Label ====>", removeQueryResult.Labels())
 	} else {
 		fmt.Println("Remove Node is Nil")
+	}
+
+	deleteQueryError := lib.Delete(
+		"MATCH (n{message: 'hello, world2'}) Delete n return n",
+		nil,
+	)
+
+	if deleteQueryError != nil {
+		fmt.Println("Delete Query Error ====>", deleteQueryError.Error())
+		return
+	}
+
+	allDeleteQueryError := lib.Delete(
+		"MATCH (n) DETACH DELETE n",
+		nil,
+	)
+
+	if allDeleteQueryError != nil {
+		fmt.Println("All Delete Query Error ====>", deleteQueryError.Error())
+		return
 	}
 }
 

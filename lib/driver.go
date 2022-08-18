@@ -91,7 +91,12 @@ func clearDriver() {
 	fmt.Println("Clear Neo4j Driver")
 
 	if driverObject != nil {
-		driverObject.Close()
+		error := driverObject.Close()
+
+		if error != nil {
+			fmt.Println("clearDriver Error ====> ", error)
+		}
+
 		driverObject = nil
 	}
 }
