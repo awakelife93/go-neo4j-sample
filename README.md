@@ -9,9 +9,8 @@
 ### Description
 
 1. neo4j admin(management browser) - {server domain or ip}:7474/browser
-  - default username = neo4j / password = test
-  - Because passwordChangeRequired=true, it is basically changed once because it is an unconditional password change when logging in for the first time.
-  
+  - default username = neo4j / password = neo4j
+2. [neo4j docs](https://neo4j.com/docs/)
 ## Author
 
 ```

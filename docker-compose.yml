@@ -7,5 +7,3 @@ services:
       - 7687:7687 # for neo4j database
     volumes:
       - ~/.data/neo4j/db:/data
-    environment:
-      - NEO4J_AUTH=neo4j/test # username/password (README.md Description 1)
