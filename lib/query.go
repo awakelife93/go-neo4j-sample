@@ -132,3 +132,19 @@ func Delete(cypher string, params map[string]interface{}) error {
 
 	return nil
 }
+
+func Update(cypher string, params map[string]interface{}) (neo4j.Node, error) {
+	var result neo4j.Node = nil
+	queryResult, error := writeTransaction(cypher, params)
+
+	if error != nil {
+		return nil, error
+	}
+
+	if queryResult != nil {
+		var queryResultArray = queryResult.([]interface{})
+		result = queryResultArray[0].(neo4j.Node)
+	}
+
+	return result, error
+}

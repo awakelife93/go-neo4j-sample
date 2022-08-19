@@ -47,6 +47,22 @@ func start() {
 		fmt.Println("Match Node is Nil")
 	}
 
+	updateQueryResult, updateQueryError := lib.Update(
+		"MATCH (n{message: 'hello, world5'}) SET n.message = 'hi' return n",
+		nil,
+	)
+
+	if updateQueryError != nil {
+		fmt.Println("Update Query Error ====>", updateQueryError.Error())
+		return
+	}
+
+	if updateQueryResult != nil {
+		fmt.Println("Update Result Label ====>", updateQueryResult.Labels())
+	} else {
+		fmt.Println("Update Node is Nil")
+	}
+
 	removeQueryResult, removeQueryError := lib.Remove(
 		"MATCH (n{message: 'hello, world1'}) REMOVE n.message return n",
 		nil,
