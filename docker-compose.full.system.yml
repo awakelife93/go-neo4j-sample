@@ -14,8 +14,8 @@ services:
       context: ./
     environment:
       uri: bolt://neo4j:7687
-      username: ${username} # default neo4j
-      password: ${password} # defaut test
+      username: ${username} # default "neo4j"
+      password: ${password} # defaut "test"
     volumes:
       - .:/app
     command: go run main.go

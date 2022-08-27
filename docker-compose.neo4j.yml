@@ -1,0 +1,11 @@
+version: '3'
+services:
+  neo4j:
+    image: neo4j:latest
+    ports:
+      - 7474:7474 # for admin browser
+      - 7687:7687 # for neo4j database
+    volumes:
+      - ~/.data/neo4j/db:/data
+    environment:
+      - NEO4J_AUTH=neo4j/test # username/password (README.md Description 1)

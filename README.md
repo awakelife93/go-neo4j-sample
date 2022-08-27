@@ -25,5 +25,8 @@ Author: Hyunwoo Park
 
 ```
 1. go run main.go or go build main.go
-2. If running in docker environment, docker-compose -f docker-compose.yml up --build
+2. If you run it with docker-compose Please check each container environment.
+  2-1. docker-compose.app.yml = Create and run only golang(app) container.
+  2-2. docker-compose.neo4j.yml = Create and run only neo4j container.
+  2-3. docker-compose.full.system.yml = Create and run each container for neo4j, and golang(app)
 ```

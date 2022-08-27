@@ -1,0 +1,12 @@
+version: '3'
+services:
+  app:
+    build:
+      context: ./
+    environment:
+      uri: ${uri} # default "bolt://localhost:7687"
+      username: ${username} # default "neo4j"
+      password: ${password} # defaut "test"
+    volumes:
+      - .:/app
+    command: go run main.go
