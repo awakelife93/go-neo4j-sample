@@ -7,17 +7,18 @@ import (
 	"github.com/awakelife93/go-neo4j-sample/lib"
 )
 
-func start() {
+func init() {
 	initializeResult, initializeError := lib.Initialize()
 
 	if initializeError != nil {
 		fmt.Println("Initialize Error ====>", initializeError.Error())
 		lib.Clear()
-		return
 	}
 
 	fmt.Println(initializeResult)
+}
 
+func start() {
 	for i := 1; i <= 10; i++ {
 		createQueryResult, createQueryError := lib.Create(
 			"CREATE (n:Sample) SET n.message = $message RETURN n.message + ', from node ' + id(n)",
