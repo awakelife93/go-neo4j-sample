@@ -17,6 +17,7 @@ func connect() error {
 	username := os.Getenv("username")
 	password := os.Getenv("password")
 
+	// * If you run it as docker, the uri is injected as bolt://neo4j:7687.
 	if funk.IsEmpty(uri) {
 		uri = "bolt://localhost:7687"
 	}

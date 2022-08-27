@@ -7,3 +7,17 @@ services:
       - 7687:7687 # for neo4j database
     volumes:
       - ~/.data/neo4j/db:/data
+    environment:
+      - NEO4J_AUTH=neo4j/test # username/password (README.md Description 1)
+  app:
+    build:
+      context: ./
+    environment:
+      uri: bolt://neo4j:7687
+      username: ${username} # default neo4j
+      password: ${password} # defaut test
+    volumes:
+      - .:/app
+    command: go run main.go
+    depends_on:
+      - neo4j
