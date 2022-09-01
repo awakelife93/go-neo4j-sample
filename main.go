@@ -43,7 +43,11 @@ func start() {
 	}
 
 	if matchQueryResult != nil {
-		fmt.Println("Match Result Label ====>", matchQueryResult.Labels())
+		for i := 0; i < len(matchQueryResult); i++ {
+			fmt.Println("Match Result Id ====>", matchQueryResult[i].Id())
+			fmt.Println("Match Result Label ====>", matchQueryResult[i].Labels())
+			fmt.Println("Match Result Props ====>", matchQueryResult[i].Props())
+		}
 	} else {
 		fmt.Println("Match Node is Nil")
 	}
@@ -59,7 +63,9 @@ func start() {
 	}
 
 	if updateQueryResult != nil {
+		fmt.Println("Update Result Id ====>", updateQueryResult.Id())
 		fmt.Println("Update Result Label ====>", updateQueryResult.Labels())
+		fmt.Println("Update Result Props ====>", updateQueryResult.Props())
 	} else {
 		fmt.Println("Update Node is Nil")
 	}
@@ -75,7 +81,9 @@ func start() {
 	}
 
 	if removeQueryResult != nil {
+		fmt.Println("Remove Result Id ====>", removeQueryResult.Id())
 		fmt.Println("Remove Result Label ====>", removeQueryResult.Labels())
+		fmt.Println("Remove Result Props ====>", removeQueryResult.Props())
 	} else {
 		fmt.Println("Remove Node is Nil")
 	}

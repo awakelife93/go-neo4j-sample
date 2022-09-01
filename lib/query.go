@@ -49,13 +49,14 @@ func readTransaction(cypher string, params map[string]interface{}) (interface{},
 		func(transaction neo4j.Transaction) (interface{}, error) {
 			result, transactionError := transaction.Run(cypher, params)
 
+			var nodes []neo4j.Node = nil
+
 			if transactionError != nil {
 				return nil, transactionError
 			}
 
 			for result.Next() {
-				returnedMap := result.Record().GetByIndex(0)
-				return returnedMap, nil
+				nodes = append(nodes, result.Record().GetByIndex(0).(neo4j.Node))
 			}
 
 			resultError := result.Err()
@@ -63,7 +64,7 @@ func readTransaction(cypher string, params map[string]interface{}) (interface{},
 				return nil, resultError
 			}
 
-			return nil, result.Err()
+			return nodes, nil
 		},
 
 		func(config *neo4j.TransactionConfig) {
@@ -92,8 +93,8 @@ func Create(cypher string, params map[string]interface{}) (string, error) {
 	return result, nil
 }
 
-func Match(cypher string, params map[string]interface{}) (neo4j.Node, error) {
-	var result neo4j.Node = nil
+func Match(cypher string, params map[string]interface{}) ([]neo4j.Node, error) {
+	var result []neo4j.Node = nil
 	queryResult, error := readTransaction(cypher, params)
 
 	if error != nil {
@@ -101,7 +102,7 @@ func Match(cypher string, params map[string]interface{}) (neo4j.Node, error) {
 	}
 
 	if queryResult != nil {
-		result = queryResult.(neo4j.Node)
+		result = queryResult.([]neo4j.Node)
 	}
 
 	return result, nil
