@@ -8,14 +8,14 @@ import (
 )
 
 func init() {
-	initializeResult, initializeError := lib.Initialize()
+	initializeError := lib.Initialize()
 
 	if initializeError != nil {
 		fmt.Println("Initialize Error ====>", initializeError.Error())
 		lib.Clear()
 	}
 
-	fmt.Println(initializeResult)
+	fmt.Println("neo4j initialize")
 }
 
 func start() {

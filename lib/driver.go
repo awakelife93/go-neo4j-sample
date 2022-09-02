@@ -66,16 +66,16 @@ func setupSession() (neo4j.Session, error) {
 	return session, error
 }
 
-func Initialize() (string, error) {
+func Initialize() error {
 	fmt.Println("Neo4j initialize")
 
 	connectError := connect()
 
 	if connectError != nil {
-		return "", connectError
+		return connectError
 	}
 
-	return "initialize success", nil
+	return nil
 }
 
 func getSession() neo4j.Session {
